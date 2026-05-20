@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Code Lock</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f4f6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      text-align: center;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    .inputs {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 40px;
+      height: 40px;
+      text-align: center;
+      font-size: 18px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      background: #2563eb;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    .error {
+      color: red;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Lock Page -->
+<div class="container" id="lockPage">
+  <h1>Enter 10-Character Code</h1>
+
+  <div class="inputs">
+    <input maxlength="1" oninput="moveNext(this,0)">
+    <input maxlength="1" oninput="moveNext(this,1)">
+    <input maxlength="1" oninput="moveNext(this,2)">
+    <input maxlength="1" oninput="moveNext(this,3)">
+    <input maxlength="1" oninput="moveNext(this,4)">
+    <input maxlength="1" oninput="moveNext(this,5)">
+    <input maxlength="1" oninput="moveNext(this,6)">
+    <input maxlength="1" oninput="moveNext(this,7)">
+    <input maxlength="1" oninput="moveNext(this,8)">
+    <input maxlength="1" oninput="moveNext(this,9)">
+  </div>
+
+  <button onclick="checkCode()">Unlock</button>
+  <p class="error" id="errorMsg"></p>
+</div>
+
+<!-- Success Page -->
+<div class="container" id="successPage" style="display:none;">
+  <h2>Clues Unlocked 🔐</h2>
+  <p>Here are your clues for the final lock:</p>
+  <ul style="text-align:left;">
+    <li>The key lies where time begins</li>
+    <li>Look for patterns in repetition</li>
+    <li>Numbers may not always be numbers</li>
+  </ul>
+</div>
+
+<script>
+  const CODE = "ABCDEFGHIJ"; // ✅ CHANGE THIS
+
+  function moveNext(el, index) {
+    el.value = el.value.toUpperCase();
+
+    if (el.value && index < 9) {
+      document.querySelectorAll("input")[index + 1].focus();
+    }
+  }
+
+  function checkCode() {
+    const inputs = document.querySelectorAll("input");
+    let entered = "";
+
+    inputs.forEach(i => entered += i.value);
+
+    if (entered === CODE) {
+      document.getElementById("lockPage").style.display = "none";
+      document.getElementById("successPage").style.display = "block";
+    } else {
+      document.getElementById("errorMsg").textContent = "Incorrect code. Try again.";
+    }
+  }
+</script>
+
+</body>
+</html>
