@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Code Lock</title>
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -22,18 +23,26 @@
       box-shadow: 0 10px 25px rgba(0,0,0,0.1);
     }
 
+    select {
+      padding: 8px;
+      margin-bottom: 20px;
+      border-radius: 6px;
+    }
+
     .inputs {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       justify-content: center;
       margin-bottom: 20px;
+      flex-wrap: wrap;
+      max-width: 500px;
     }
 
     input {
-      width: 40px;
+      width: 35px;
       height: 40px;
       text-align: center;
-      font-size: 18px;
+      font-size: 16px;
       border: 1px solid #ccc;
       border-radius: 6px;
     }
@@ -55,64 +64,120 @@
       color: red;
       margin-top: 10px;
     }
+
+    .success-text {
+      font-size: 30px;
+      color: #16a34a;
+      animation: pop 1s ease forwards;
+    }
+
+    .mission-text {
+      font-size: 18px;
+      margin-top: 10px;
+      opacity: 0;
+      animation: fadeIn 2s ease forwards;
+      animation-delay: 1s;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(0.5); opacity: 0; }
+      70% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
+
 <body>
 
-<!-- Lock Page -->
+<!-- LOCK PAGE -->
 <div class="container" id="lockPage">
-  <h1>Enter 10-Character Code</h1>
+  <h1>Enter 15-Character Code</h1>
 
-  <div class="inputs">
-    <input maxlength="1" oninput="moveNext(this,0)">
-    <input maxlength="1" oninput="moveNext(this,1)">
-    <input maxlength="1" oninput="moveNext(this,2)">
-    <input maxlength="1" oninput="moveNext(this,3)">
-    <input maxlength="1" oninput="moveNext(this,4)">
-    <input maxlength="1" oninput="moveNext(this,5)">
-    <input maxlength="1" oninput="moveNext(this,6)">
-    <input maxlength="1" oninput="moveNext(this,7)">
-    <input maxlength="1" oninput="moveNext(this,8)">
-    <input maxlength="1" oninput="moveNext(this,9)">
-  </div>
+  <!-- TEAM SELECT -->
+  <select id="teamSelect">
+    <option value="">Select Team</option>
+    <option value="team1">Team 1</option>
+    <option value="team2">Team 2</option>
+    <option value="team3">Team 3</option>
+    <option value="team4">Team 4</option>
+    <option value="team5">Team 5</option>
+    <option value="team6">Team 6</option>
+  </select>
+
+  <!-- INPUT BOXES -->
+  <div class="inputs" id="inputsContainer"></div>
 
   <button onclick="checkCode()">Unlock</button>
   <p class="error" id="errorMsg"></p>
 </div>
 
-<!-- Success Page -->
+<!-- SUCCESS PAGE -->
 <div class="container" id="successPage" style="display:none;">
-  <h2>Clues Unlocked 🔐</h2>
-  <p>Here are your clues for the final lock:</p>
-  <ul style="text-align:left;">
-    <li>The key lies where time begins</li>
-    <li>Look for patterns in repetition</li>
-    <li>Numbers may not always be numbers</li>
-  </ul>
+  <h1 class="success-text">🎉 CONGRATULATIONS 🎉</h1>
+  <h2 class="mission-text">ON COMPLETING THE MISSION BLACKBOX</h2>
 </div>
 
 <script>
-  const CODE = "ABCDEFGHIJ"; // ✅ CHANGE THIS
+  // ✅ TEAM CODES
+  const TEAM_CODES = {
+    team1: "HNAWQ53PZOJ19HB",
+    team2: "GOEQUHVRNGCAK7I",
+    team3: "LAIAFPFNH4SBVA2",
+    team4: "CGVEIOHWZIT3ACL",
+    team5: "AHJAGUBVHWEOD8N",
+    team6: "TGXAIUAOINKOD9N"
+  };
 
-  function moveNext(el, index) {
-    el.value = el.value.toUpperCase();
+  // ✅ CREATE INPUT BOXES DYNAMICALLY (15)
+  const container = document.getElementById("inputsContainer");
 
-    if (el.value && index < 9) {
-      document.querySelectorAll("input")[index + 1].focus();
-    }
+  for (let i = 0; i < 15; i++) {
+    const input = document.createElement("input");
+    input.maxLength = 1;
+
+    input.oninput = function () {
+      this.value = this.value.toUpperCase();
+      if (this.value && i < 14) {
+        container.children[i + 1].focus();
+      }
+    };
+
+    container.appendChild(input);
   }
 
   function checkCode() {
-    const inputs = document.querySelectorAll("input");
+    const team = document.getElementById("teamSelect").value;
+    const inputs = document.querySelectorAll("#inputsContainer input");
+
+    if (!team) {
+      document.getElementById("errorMsg").textContent = "Please select a team.";
+      return;
+    }
+
+    const correctCode = TEAM_CODES[team];
     let entered = "";
+    let wrongCount = 0;
 
-    inputs.forEach(i => entered += i.value);
+    inputs.forEach((input, index) => {
+      const val = input.value.toUpperCase();
+      entered += val;
 
-    if (entered === CODE) {
+      if (val !== correctCode[index]) {
+        wrongCount++;
+      }
+    });
+
+    if (entered === correctCode) {
       document.getElementById("lockPage").style.display = "none";
       document.getElementById("successPage").style.display = "block";
     } else {
-      document.getElementById("errorMsg").textContent = "Incorrect code. Try again.";
+      document.getElementById("errorMsg").textContent =
+        wrongCount + " characters are wrong. Please recheck.";
     }
   }
 </script>
