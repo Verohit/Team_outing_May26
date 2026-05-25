@@ -1,95 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Code Lock</title>
+<meta charset="UTF-8">
+<title>Code Lock</title>
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f3f4f6;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
+<style>
 
-    .container {
-      text-align: center;
-      background: white;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    }
+/* 🌌 ANIMATED BACKGROUND */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-    select {
-      padding: 8px;
-      margin-bottom: 20px;
-      border-radius: 6px;
-    }
+  background: linear-gradient(
+    270deg,
+    #000000,
+    #111827,
+    #374151,
+    #9ca3af,
+    #ffffff,
+    #d4af37,
+    #111827,
+    #000000
+  );
 
-    .inputs {
-      display: flex;
-      gap: 6px;
-      justify-content: center;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-      max-width: 500px;
-    }
+  background-size: 500% 500%;
+  animation: gradientFlow 15s ease infinite;
+}
 
-    input {
-      width: 35px;
-      height: 40px;
-      text-align: center;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
+@keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
 
-    button {
-      padding: 10px 20px;
-      border: none;
-      background: #2563eb;
-      color: white;
-      border-radius: 6px;
-      cursor: pointer;
-    }
+/* ✅ BIGGER CONTAINER */
+.container {
+  text-align: center;
+  width: 90%;
+  max-width: 1000px;
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(14px);
+  padding: 30px;
+  border-radius: 14px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+  color: white;
+}
 
-    button:hover {
-      background: #1d4ed8;
-    }
+/* Dropdown */
+select {
+  padding: 8px;
+  margin-bottom: 20px;
+  border-radius: 6px;
+}
 
-    .error {
-      color: red;
-      margin-top: 10px;
-    }
+/* ✅ 15 PERFECTLY EVEN BOXES */
+.inputs {
+  display: grid;
+  grid-template-columns: repeat(15, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
 
-    .success-text {
-      font-size: 30px;
-      color: #16a34a;
-      animation: pop 1s ease forwards;
-    }
+/* Bigger input boxes */
+input {
+  width: 100%;
+  height: 45px;
+  text-align: center;
+  font-size: 18px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background: rgba(255,255,255,0.95);
+  color: black;
+}
 
-    .mission-text {
-      font-size: 18px;
-      margin-top: 10px;
-      opacity: 0;
-      animation: fadeIn 2s ease forwards;
-      animation-delay: 1s;
-    }
+/* Button */
+button {
+  padding: 10px 20px;
+  border: none;
+  background: linear-gradient(45deg, #2563eb, #d4af37);
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
+  transition: 0.3s;
+}
 
-    @keyframes pop {
-      0% { transform: scale(0.5); opacity: 0; }
-      70% { transform: scale(1.2); opacity: 1; }
-      100% { transform: scale(1); }
-    }
+button:hover {
+  transform: scale(1.05);
+}
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  </style>
+/* Error */
+.error {
+  color: #ff4d4d;
+  margin-top: 10px;
+}
+
+/* SUCCESS */
+.success-text {
+  font-size: 32px;
+  color: #d4af37;
+  animation: pop 1s ease forwards;
+}
+
+.mission-text {
+  font-size: 18px;
+  margin-top: 10px;
+  opacity: 0;
+  animation: fadeIn 2s ease forwards;
+  animation-delay: 1s;
+}
+
+@keyframes pop {
+  0% { transform: scale(0.5); opacity: 0; }
+  70% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+</style>
 </head>
 
 <body>
@@ -98,7 +134,6 @@
 <div class="container" id="lockPage">
   <h1>Enter 15-Character Code</h1>
 
-  <!-- TEAM SELECT -->
   <select id="teamSelect">
     <option value="">Select Team</option>
     <option value="team1">Team 1</option>
@@ -109,7 +144,6 @@
     <option value="team6">Team 6</option>
   </select>
 
-  <!-- INPUT BOXES -->
   <div class="inputs" id="inputsContainer"></div>
 
   <button onclick="checkCode()">Unlock</button>
@@ -123,63 +157,66 @@
 </div>
 
 <script>
-  // ✅ TEAM CODES
-  const TEAM_CODES = {
-    team1: "HNAWQ53PZOJ19HB",
-    team2: "GOEQUHVRNGCAK7I",
-    team3: "LAIAFPFNH4SBVA2",
-    team4: "CGVEIOHWZIT3ACL",
-    team5: "AHJAGUBVHWEOD8N",
-    team6: "TGXAIUAOINKOD9N"
+
+// ✅ TEAM CODES
+const TEAM_CODES = {
+  team1: "HNAWQ53PZOJ19HB",
+  team2: "GOEQUHVRNGCAK7I",
+  team3: "LAIAFPFNH4SBVA2",
+  team4: "CGVEIOHWZIT3ACL",
+  team5: "AHJAGUBVHWEOD8N",
+  team6: "TGXAIUAOINKOD9N"
+};
+
+// Create 15 inputs
+const container = document.getElementById("inputsContainer");
+
+for (let i = 0; i < 15; i++) {
+  const input = document.createElement("input");
+  input.maxLength = 1;
+
+  input.oninput = function () {
+    this.value = this.value.toUpperCase();
+    if (this.value && i < 14) {
+      container.children[i + 1].focus();
+    }
   };
 
-  // ✅ CREATE INPUT BOXES DYNAMICALLY (15)
-  const container = document.getElementById("inputsContainer");
+  container.appendChild(input);
+}
 
-  for (let i = 0; i < 15; i++) {
-    const input = document.createElement("input");
-    input.maxLength = 1;
+// ✅ CHECK CODE
+function checkCode() {
+  const team = document.getElementById("teamSelect").value;
+  const inputs = document.querySelectorAll("#inputsContainer input");
 
-    input.oninput = function () {
-      this.value = this.value.toUpperCase();
-      if (this.value && i < 14) {
-        container.children[i + 1].focus();
-      }
-    };
-
-    container.appendChild(input);
+  if (!team) {
+    document.getElementById("errorMsg").textContent = "Please select a team.";
+    return;
   }
 
-  function checkCode() {
-    const team = document.getElementById("teamSelect").value;
-    const inputs = document.querySelectorAll("#inputsContainer input");
+  const correctCode = TEAM_CODES[team];
+  let entered = "";
+  let wrongCount = 0;
 
-    if (!team) {
-      document.getElementById("errorMsg").textContent = "Please select a team.";
-      return;
+  inputs.forEach((input, index) => {
+    const val = input.value.toUpperCase();
+    entered += val;
+
+    if (val !== correctCode[index]) {
+      wrongCount++;
     }
+  });
 
-    const correctCode = TEAM_CODES[team];
-    let entered = "";
-    let wrongCount = 0;
-
-    inputs.forEach((input, index) => {
-      const val = input.value.toUpperCase();
-      entered += val;
-
-      if (val !== correctCode[index]) {
-        wrongCount++;
-      }
-    });
-
-    if (entered === correctCode) {
-      document.getElementById("lockPage").style.display = "none";
-      document.getElementById("successPage").style.display = "block";
-    } else {
-      document.getElementById("errorMsg").textContent =
-        wrongCount + " characters are wrong. Please recheck.";
-    }
+  if (entered === correctCode) {
+    document.getElementById("lockPage").style.display = "none";
+    document.getElementById("successPage").style.display = "block";
+  } else {
+    document.getElementById("errorMsg").textContent =
+      wrongCount + " characters are wrong. Please recheck.";
   }
+}
+
 </script>
 
 </body>
